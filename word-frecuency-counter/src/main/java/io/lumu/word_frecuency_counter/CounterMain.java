@@ -1,8 +1,10 @@
+package io.lumu.word_frecuency_counter;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Counter {
+public class CounterMain {
     public static void main(String[] args) {
         File file = new File("src/main/resources/fileToRead.txt");
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(file));) {

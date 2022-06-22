@@ -1,9 +1,14 @@
 plugins {
-    id 'java'
+    id "application"
+}
+apply plugin : "java"
+ext {
+    javaMainClass = "io.lumu.word_frecuency_counter.CounterMain"
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+application {
+    mainClassName = javaMainClass
+}
 
 repositories {
     mavenCentral()
