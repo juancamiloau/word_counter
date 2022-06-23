@@ -1,8 +1,10 @@
 package io.lumu.word_frecuency_counter;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CounterMain {
     public static void main(String[] args) {
@@ -13,58 +15,24 @@ public class CounterMain {
             while ((line = bufferedReader.readLine()) != null) {
                 allLines += line+ "\n";
             }
+            String[] words = allLines.split("[\\s|\\n]");
             System.out.println(allLines);
-            System.out.println(words(allLines) + " words");
-            System.out.println(characters(allLines) + " characters");
-
-            String[][] histogram = getMostRepeatedWords(allLines);
-            for (int i = 0; i < histogram.length; i++) {
-                System.out.println(histogram[i][0] + ": " + histogram[i][1]);
-            }
+            System.out.println(words.length + " words");
+            System.out.println(allLines.replace("\n","").length() + " characters");
+            getMostRepeatedWords(words);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static int words(String allLines) {
-        if (allLines.length() > 0)
-            return allLines.replace("\n", " ").split(" ").length;
-        else
-            return 0;
-    }
-
-    public static int characters(String allLines) {
-        return allLines.replace("\n", "").length();
-    }
-
-
-    public static String[][] getMostRepeatedWords(String allLines) {
-        String[] words = allLines.replace("\n", " ").replace(".", " ").split(" ");
-        List<String> wordsNoRepeated = new ArrayList();
-        for (int i = 0; i < words.length; i++) {
-            if (!wordsNoRepeated.contains(words[i])) {
-                wordsNoRepeated.add(words[i]);
-            }
+    public static void getMostRepeatedWords(String[] words) {
+        HashMap<String, Integer> dictionary = new HashMap();
+        for (String word: words) {
+            Integer value = dictionary.get(word);
+            dictionary.put(word, value ==null ? 1 : value+1);
         }
-        String[][] mostRepeatedWords = new String[wordsNoRepeated.size()][2];
-        for (int k = 0; k < mostRepeatedWords.length; k++) {
-            String mostRepeated = words[0];
-            int countMostRepeated = 0;
-            for (String word : wordsNoRepeated) {
-                int count = 0;
-                for (int i = 0; i < words.length; i++) {
-                    if (word.equalsIgnoreCase(words[i]))
-                        count++;
-                }
-                if (count > countMostRepeated) {
-                    mostRepeated = word;
-                    countMostRepeated = count;
-                }
-            }
-            mostRepeatedWords[k][0] = mostRepeated;
-            mostRepeatedWords[k][1] = "" + countMostRepeated;
-            wordsNoRepeated.remove(mostRepeated);
-        }
-        return mostRepeatedWords;
+        dictionary.entrySet().stream()
+                .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
+                .forEach(k -> System.out.println(k.getKey() + ": " + k.getValue()));
     }
 }
