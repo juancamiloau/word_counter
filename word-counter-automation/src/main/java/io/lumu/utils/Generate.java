@@ -2,7 +2,6 @@ package io.lumu.utils;
 
 import com.github.javafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Generate {

@@ -1,13 +1,16 @@
 package io.lumu.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Count {
     private String paragraphs;
 
+    private String[] words;
     private Count(String paragraphs) {
         this.paragraphs = paragraphs;
+        words = paragraphs.split("[\\s|\\n|.]");
     }
 
     public static Count theString(String string) {
@@ -27,33 +30,21 @@ public class Count {
 
 
     public String[][] getLast3MostRepeatedWords() {
-        String[] words = paragraphs.replace("\n", " ").replace("."," ").split(" ");
-        List<String> wordsNoRepeated = new ArrayList();
-        for (int i = 0; i < words.length; i++) {
-            if (!wordsNoRepeated.contains(words[i])) {
-                wordsNoRepeated.add(words[i]);
-            }
+        HashMap<String, Integer> dictionary = new HashMap();
+        for (String word: words) {
+            word = word.toLowerCase();
+            Integer value = dictionary.get(word);
+            dictionary.put(word, value ==null ? 1 : value+1);
         }
-        String[][] mostRepeatedWords = new String[3][2];
-        for (int k = 0; k < mostRepeatedWords.length; k++) {
-            String mostRepeated = words[0];
-            int countMostRepeated = 0;
-            for (String word : wordsNoRepeated) {
-                int count = 0;
-                for (int i = 0; i < words.length; i++) {
-                    if (word.equalsIgnoreCase(words[i]))
-                        count++;
-                }
-                if (count > countMostRepeated) {
-                    mostRepeated = word;
-                    countMostRepeated = count;
-                }
-            }
-            mostRepeatedWords[k][0] = mostRepeated;
-            mostRepeatedWords[k][1] = "" + countMostRepeated;
-            wordsNoRepeated.remove(mostRepeated);
+        dictionary = SortMaps.sortByValue(dictionary);
+        List<String> keys = new ArrayList(dictionary.keySet());
+        List<Integer> values = new ArrayList(dictionary.values());
+        String[][] wordsRepeated = new String[3][2];
+        for (int i = 0; i < 3; i++) {
+            wordsRepeated[i][0] = keys.get(i);
+            wordsRepeated[i][1] = values.get(i).toString();
         }
-        return mostRepeatedWords;
+        return wordsRepeated;
     }
 
 }

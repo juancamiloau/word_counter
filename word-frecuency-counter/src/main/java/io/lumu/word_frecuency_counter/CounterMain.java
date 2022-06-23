@@ -1,10 +1,10 @@
 package io.lumu.word_frecuency_counter;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class CounterMain {
     public static void main(String[] args) {
@@ -15,7 +15,7 @@ public class CounterMain {
             while ((line = bufferedReader.readLine()) != null) {
                 allLines += line+ "\n";
             }
-            String[] words = allLines.split("[\\s|\\n]");
+            String[] words = allLines.split("[\\s|\\n|.]");
             System.out.println(allLines);
             System.out.println(words.length + " words");
             System.out.println(allLines.replace("\n","").length() + " characters");
@@ -28,6 +28,7 @@ public class CounterMain {
     public static void getMostRepeatedWords(String[] words) {
         HashMap<String, Integer> dictionary = new HashMap();
         for (String word: words) {
+            word = word.toLowerCase();
             Integer value = dictionary.get(word);
             dictionary.put(word, value ==null ? 1 : value+1);
         }
